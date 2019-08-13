@@ -1,25 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+// React
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter, Route } from 'react-router-dom';
 
-function App() {
+// Local
+import './App.scss';
+import Nav from './components/Navigation/Nav';
+import Home from './components/Home/Home';
+import Login from './components/Auth/Login';
+import Fire from './firebase/Firebase';
+
+
+
+
+
+const App = () => {
+const [user, setUser] = useState();
+
+useEffect(() => authListener(), [])
+
+const authListener = () => {
+	Fire.auth().onAuthStateChanged((user) => {
+		if (user) {
+			setUser({user});
+		} else {
+			setUser();
+		}
+	})
+}
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+	<div className="App">
+		{!user ? (<Login/>) : (<Home/>)}
+		{console.log(user)}
+	</div>
   );
 }
 
